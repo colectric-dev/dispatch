@@ -11,7 +11,9 @@ Release Notes
 What's New?
 ^^^^^^^^^^^
 *  Transition to uv and tox-uv.
-*  Downgrading kaleido version below v1.0 to avoid chrome requirement.
+*  In testing, kaleido gets chrome if it is not available.
+*  :mod:`etoolbox` is no longer a dependency.
+   Without it :meth:`.DispatchModel.from_file` and :meth:`.DispatchModel.to_file` do not work.
 
 Bug Fixes
 ^^^^^^^^^

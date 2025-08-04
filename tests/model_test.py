@@ -238,6 +238,7 @@ class TestOutputs:
     (sys.platform == "win32") & (sys.version_info > (3, 10)),
     reason="plotly or kaleido intermittently hangs on windows in python 3.11",
 )
+@pytest.mark.usefixtures("setup_kaleido")
 class TestPlotting:
     """Tests for plotting methods."""
 

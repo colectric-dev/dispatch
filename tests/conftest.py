@@ -196,3 +196,11 @@ def mini_dm(fossil_profiles, fossil_specs, fossil_cost, re_profiles):
         ).set_index(["plant_id_eia", "generator_id"]),
     )()
     return dm
+
+
+@pytest.fixture(scope="session")
+def setup_kaleido():
+    """Make sure chrome is installed for kaleido."""
+    kaleido = pytest.importorskip("kaleido")
+
+    kaleido.get_chrome_sync()

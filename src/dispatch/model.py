@@ -23,7 +23,23 @@ except ModuleNotFoundError:
 
 __all__ = ["DispatchModel"]
 
-from etoolbox.datazip import IOMixin
+try:
+    from etoolbox.datazip import IOMixin
+
+except ModuleNotFoundError:
+
+    class IOMixin:
+        __slots__ = ()
+
+        @classmethod
+        def from_file(cls, *args, **kwargs) -> Any:
+            """Recreate object fom file or buffer."""
+            raise NotImplementedError("etoolbox is required for this functionality")
+
+        def to_file(self, *args, **kwargs) -> None:
+            """Write object to file or buffer."""
+            raise NotImplementedError("etoolbox is required for this functionality")
+
 
 from dispatch import __version__
 from dispatch.constants import COLOR_MAP, MTDF, PLOT_MAP
