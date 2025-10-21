@@ -64,9 +64,9 @@ def test_engine(py_func, marginal_for_startup_rank):
         marginal_for_startup_rank=marginal_for_startup_rank,
     )
     if py_func:
-        redispatch, es, sl, st = dispatch_engine.py_func(**in_dict)
+        redispatch, es, _sl, _st = dispatch_engine.py_func(**in_dict)
     else:
-        redispatch, es, sl, st = dispatch_engine(**in_dict)
+        redispatch, es, _sl, _st = dispatch_engine(**in_dict)
     assert np.all(redispatch.sum(axis=1) + es[:, 1, :].sum(axis=1) >= NL)
 
 
@@ -106,9 +106,9 @@ def test_dispatch_engine_auto(py_func, coeff, reserve, marginal_for_startup_rank
         marginal_for_startup_rank=marginal_for_startup_rank,
     )
     if py_func:
-        redispatch, es, sl, st = dispatch_engine_auto.py_func(**in_dict)
+        redispatch, es, _sl, _st = dispatch_engine_auto.py_func(**in_dict)
     else:
-        redispatch, es, sl, st = dispatch_engine_auto(**in_dict)
+        redispatch, es, _sl, _st = dispatch_engine_auto(**in_dict)
     assert np.all(redispatch.sum(axis=1) + es[:, 1, :].sum(axis=1) >= NL)
 
 

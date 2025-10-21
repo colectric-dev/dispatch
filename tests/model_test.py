@@ -221,7 +221,7 @@ class TestOutputs:
     )
     def test_outputs_parametric(self, ent_dm, func, args, drop_cols, expected):
         """Test that outputs are not empty or do not have unexpected nans."""
-        ind, ent_dm = ent_dm
+        _ind, ent_dm = ent_dm
         df = getattr(ent_dm, func)(**args)
         if isinstance(df, pd.Series):
             df = df.to_frame(name=func)
@@ -244,7 +244,7 @@ class TestPlotting:
 
     def test_plot_all_years(self, ent_dm, temp_dir):
         """Test that outputs are not empty or do not have unexpected nans."""
-        ind, ent_dm = ent_dm
+        _ind, ent_dm = ent_dm
         y = ent_dm.plot_all_years()
         img_path = temp_dir / "test_plot_all_years.pdf"
         try:

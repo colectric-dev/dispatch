@@ -802,7 +802,7 @@ class DispatchModel(IOMixin):
             index=self.load_profile.index, method="ffill"
         )
 
-        fos_prof, storage, system, starts = func(
+        fos_prof, storage, system, _starts = func(
             net_load=self.net_load_profile.to_numpy(dtype=np.float_),
             hr_to_cost_idx=cost_idx.to_numpy(dtype=np.int64),
             historical_dispatch=d_prof,
