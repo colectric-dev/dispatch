@@ -238,7 +238,6 @@ class TestOutputs:
     (sys.platform == "win32") & (sys.version_info > (3, 10)),
     reason="plotly or kaleido intermittently hangs on windows in python 3.11",
 )
-@pytest.mark.usefixtures("setup_kaleido")
 class TestPlotting:
     """Tests for plotting methods."""
 
@@ -246,9 +245,9 @@ class TestPlotting:
         """Test that outputs are not empty or do not have unexpected nans."""
         _ind, ent_dm = ent_dm
         y = ent_dm.plot_all_years()
-        img_path = temp_dir / "test_plot_all_years.pdf"
+        img_path = temp_dir / "test_plot_all_years.html"
         try:
-            y.write_image(str(img_path))
+            y.write_html(str(img_path), include_plotlyjs="cdn")
         except Exception as exc:
             raise AssertionError("unable to write image") from exc
 
@@ -256,21 +255,21 @@ class TestPlotting:
     def test_plotting(self, mini_dm, temp_dir, freq):
         """Testing plotting function."""
         y = mini_dm.plot_year(2015, freq=freq)
-        img_path = temp_dir / f"test_plotting_{freq}.pdf"
+        img_path = temp_dir / f"test_plotting_{freq}.html"
         try:
-            y.write_image(str(img_path))
+            y.write_html(str(img_path), include_plotlyjs="cdn")
         except Exception as exc:
             raise AssertionError("unable to write image") from exc
 
     def test_plot_detail_ent(self, ent_fresh, temp_dir):
         """Testing plotting function."""
-        img_path = temp_dir / "test_plot_detail_ent.pdf"
+        img_path = temp_dir / "test_plot_detail_ent.html"
         self = DispatchModel(**ent_fresh)()
         x = self.plot_period("2034-01-01", "2034-01-05", compare_hist=True)
         with DataZip(temp_dir / "test_img", "w") as dz:
             dz["img"] = x
         try:
-            x.write_image(img_path)
+            x.write_html(img_path, include_plotlyjs="cdn")
         except Exception as exc:
             raise AssertionError("unable to write image") from exc
         else:
@@ -278,11 +277,11 @@ class TestPlotting:
 
     def test_plot_period_comp(self, ent_redispatch, temp_dir):
         """Testing plotting function."""
-        img_path = temp_dir / "test_plot_period_comp.pdf"
+        img_path = temp_dir / "test_plot_period_comp.html"
         self = DispatchModel(**ent_redispatch)()
         x = self.plot_period("2034-01-01", "2034-01-05", compare_hist=False)
         try:
-            x.write_image(img_path)
+            x.write_html(img_path, include_plotlyjs="cdn")
         except Exception as exc:
             raise AssertionError("unable to write image") from exc
         else:
@@ -290,11 +289,11 @@ class TestPlotting:
 
     def test_plot_year_ent(self, ent_fresh, temp_dir):
         """Testing plotting function."""
-        img_path = temp_dir / "test_plot_year_ent.pdf"
+        img_path = temp_dir / "test_plot_year_ent.html"
         self = DispatchModel(**ent_fresh)()
         x = self.plot_year(2034)
         try:
-            x.write_image(img_path)
+            x.write_html(img_path, include_plotlyjs="cdn")
         except Exception as exc:
             raise AssertionError("unable to write image") from exc
         else:
@@ -310,8 +309,21 @@ class TestPlotting:
     def test_plot_output(self, ent_dm, temp_dir, col, freq):
         """Testing plotting function."""
         ind, ent_dm = ent_dm
-        img_path = temp_dir / f"test_plot_output_{ind}_{col}_{freq}.pdf"
+        img_path = temp_dir / f"test_plot_output_{ind}_{col}_{freq}.html"
         x = ent_dm.plot_output(col, freq=freq)
+        try:
+            x.write_html(img_path, include_plotlyjs="cdn")
+        except Exception as exc:
+            raise AssertionError("unable to write image") from exc
+        else:
+            assert True
+
+    @pytest.mark.usefixtures("setup_kaleido")
+    def test_plot_period_comp_kaleido(self, ent_redispatch, temp_dir):
+        """Testing plotting function."""
+        img_path = temp_dir / "test_plot_period_comp.pdf"
+        self = DispatchModel(**ent_redispatch)()
+        x = self.plot_period("2034-01-01", "2034-01-05", compare_hist=False)
         try:
             x.write_image(img_path)
         except Exception as exc:
