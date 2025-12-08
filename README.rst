@@ -10,9 +10,6 @@ Dispatch: A simple and efficient electricity dispatch model
    :target: https://rmi.github.io/dispatch/
    :alt: GitHub Pages Status
 
-.. image:: https://coveralls.io/repos/github/RMI/dispatch/badge.svg?branch=main
-   :target: https://coveralls.io/github/RMI/dispatch?branch=main
-
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
    :target: https://github.com/psf/black>
    :alt: Any color you want, so long as it's black.
