@@ -77,6 +77,14 @@ constraint-dependencies = ["kaleido!=0.2.1.post1"]
 max-line-length = 88
 ignore-path = "docs/_build"
 
+[tool.coverage]
+run.parallel = true
+run.branch = true
+run.source = [ "dispatch" ]
+paths.source = [ "src", ".tox/3*/**/site-packages" ]
+report.omit = [ "*/_version.py" ]
+report.show_missing = true
+
 [tool.pytest.ini_options]
 testpaths = ["."]
 addopts = ["--verbose", "--doctest-modules"]
@@ -176,7 +184,12 @@ pydocstyle.convention = "google"
 "tests/engine_test.py" = ["E501"]
 
 [tool.tox]
-env_list = [ "linters", "docs", "3.12", "3.13" ]
+env_list = [ "linters", "docs", "prep", "3.12", "3.13", "coverage" ]
+
+[tool.tox.env.prep]
+skip_install = true
+deps = "coverage"
+commands = [ [ "coverage", "erase" ] ]
 
 [tool.tox.env_run_base]
 allowlist_externals = [ "bash", "ruff", "pre-commit" ]
@@ -184,9 +197,15 @@ runner = "uv-venv-runner"
 passenv = [ "ETB_AZURE_SAS_TOKEN", "ETB_AZURE_ACCOUNT_NAME" ]
 extras = [ "dev", "viz" ]
 commands = [
-    [ "coverage", "erase" ],
     [ "coverage", "run", "--source={envsitepackagesdir}/dispatch", "-m", "pytest", "--doctest-modules", "{envsitepackagesdir}/dispatch", "tests" ],
-    [ "coverage", "lcov", "-o", "coverage.info" ],
+]
+
+[tool.tox.env.coverage]
+depends = "3.{12,13}"
+skip_install = true
+deps = "coverage"
+commands = [
+    [ "coverage", "combine" ],
     [ "coverage", "report", "--sort=cover" ],
 ]
 
@@ -204,6 +223,7 @@ commands = [
     [ "pre-commit", "run", "--all-files", "--show-diff-on-failure", "name-tests-test" ],
     [ "ruff", "check", "." ],
 ]
+
 
 [tool.tox.env.docs]
 description = "Build the HTML docs from scratch using Sphinx."
