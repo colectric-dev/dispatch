@@ -94,7 +94,7 @@ intersphinx_mapping = {
     "scipy": ("https://docs.scipy.org/doc/scipy/", None),
     "setuptools": ("https://setuptools.pypa.io/en/latest/", None),
     "tox": ("https://tox.wiki/en/latest/", None),
-    "etoolbox": ("https://rmi.github.io/etoolbox/", None),
+    "datazip": ("https://colectric-dev.github.io/datazip/", None),
 }
 "https://plotly.com/python-api-reference/generated/plotly.graph_objects.Figure.html"
 "https://plotly.com/python-api-reference/generated/plotly.graph_objs.Figure"

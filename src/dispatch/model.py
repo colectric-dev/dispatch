@@ -24,7 +24,7 @@ except ModuleNotFoundError:
 __all__ = ["DispatchModel"]
 
 try:
-    from etoolbox.datazip import IOMixin
+    from datazip import IOMixin
 
 except ModuleNotFoundError:
 
@@ -34,11 +34,11 @@ except ModuleNotFoundError:
         @classmethod
         def from_file(cls, *args, **kwargs) -> Any:
             """Recreate object fom file or buffer."""
-            raise NotImplementedError("etoolbox is required for this functionality")
+            raise NotImplementedError("datazip is required for this functionality")
 
         def to_file(self, *args, **kwargs) -> None:
             """Write object to file or buffer."""
-            raise NotImplementedError("etoolbox is required for this functionality")
+            raise NotImplementedError("datazip is required for this functionality")
 
 
 from dispatch import __version__
@@ -1844,7 +1844,7 @@ class DispatchModel(IOMixin):
             .for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
             .update_xaxes(title=None)
             .for_each_yaxis(
-                lambda yaxis: (yaxis.update(title=yt) if yaxis.title.text else None)
+                lambda yaxis: yaxis.update(title=yt) if yaxis.title.text else None
             )
             .update_traces(
                 marker_line_width=0.1,
@@ -1889,7 +1889,7 @@ class DispatchModel(IOMixin):
             .for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
             .update_xaxes(title=None)
             .for_each_yaxis(
-                lambda yaxis: (yaxis.update(title="MWh") if yaxis.title.text else None)
+                lambda yaxis: yaxis.update(title="MWh") if yaxis.title.text else None
             )
             .update_traces(
                 marker_line_width=0.1,

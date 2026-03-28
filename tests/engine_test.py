@@ -2,7 +2,6 @@
 
 import numpy as np
 import pytest
-from etoolbox.utils.testing import idfn
 
 from dispatch.engine import (
     adjust_for_storage_reserve,
@@ -16,6 +15,14 @@ from dispatch.engine import (
     make_rank_arrays,
     validate_inputs,
 )
+
+
+def idfn(val):
+    """ID function for pytest parameterization."""
+    if isinstance(val, float):
+        return None
+    return str(val)
+
 
 NL = [
     -500.0,

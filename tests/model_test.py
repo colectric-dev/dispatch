@@ -8,13 +8,19 @@ import numpy as np
 import pandas as pd
 import pandera as pa
 import pytest
-from etoolbox.datazip import DataZip
-from etoolbox.utils.testing import idfn
+from datazip import DataZip
 
 from dispatch import DispatchModel
 from dispatch.helpers import zero_profiles_outside_operating_dates
 
 logger = logging.getLogger(__name__)
+
+
+def idfn(val):
+    """ID function for pytest parameterization."""
+    if isinstance(val, float):
+        return None
+    return str(val)
 
 
 def test_new_no_dates(fossil_profiles, re_profiles, fossil_specs, fossil_cost):
