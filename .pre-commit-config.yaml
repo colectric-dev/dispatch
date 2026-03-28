@@ -12,19 +12,17 @@ repos:
       - id: python-use-type-annotations # Use annotations not old-style type comments
 
   # Other file formatting, plus common Git mistakes & text file standardization:
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v6.0.0
+  - repo: builtin
     hooks:
       - id: check-added-large-files # Don't accidentally commit giant files.
-        args: ["--maxkb=25000"]
+        args: ["--maxkb=9000"]
       - id: check-merge-conflict # Watch for lingering merge markers.
       - id: check-yaml # Validate all YAML files.
+      - id: check-toml # Validate all YAML files.
       - id: check-case-conflict # Avoid case sensitivity in file names.
-      - id: debug-statements # Watch for lingering debugger calls.
       - id: end-of-file-fixer # Ensure there's a newline at EOF.
       - id: mixed-line-ending # Only newlines, no line-feeds.
       - id: trailing-whitespace # Remove trailing whitespace.
-      - id: name-tests-test # Follow PyTest naming convention.
 
   ########################################################################################
   # Formatters: hooks that re-write Python and RST files
@@ -32,9 +30,9 @@ repos:
 
   # Linter and formatter that replaces flake8, isort, etc.
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.8
+    rev: v0.15.8
     hooks:
-      - id: ruff
+      - id: ruff-check
         args: [--fix, --exit-non-zero-on-fix]
       - id: ruff-format
 

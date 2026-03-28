@@ -45,17 +45,9 @@ doc = [
     "sphinx-autodoc-typehints>1.19,<3.7.0",
     "sphinxcontrib-mermaid>0.7,<2.1.0",
 ]
-qa = [ # in local development these are provided globally, here for GHA
-    "pre-commit>=2.9,<4.6",  # Allow us to run pre-commit hooks in testing
-    "pre-commit-uv>=4.1,<4.3",
-    "ruff>0.0.215,<0.15.1",
-]
-tooling = [ # in local development these are provided globally
-    "rmi-dispatch[qa]",
-    "tox>=4.16.0,<4.35",  # Python test environment manager
-    "tox-uv>=1.25,<2",
-]
-tests = ["rmi-dispatch[dev,tooling]"]
+qa = []
+tooling = []
+tests = []
 viz = [
     "plotly>5.10,<6.6",
     "kaleido>0.2,<2",
@@ -192,9 +184,8 @@ deps = "coverage"
 commands = [ [ "coverage", "erase" ] ]
 
 [tool.tox.env_run_base]
-allowlist_externals = [ "bash", "ruff", "pre-commit" ]
+allowlist_externals = [ "bash", "ruff", "prek" ]
 runner = "uv-venv-runner"
-passenv = [ "ETB_AZURE_SAS_TOKEN", "ETB_AZURE_ACCOUNT_NAME" ]
 extras = [ "dev", "viz" ]
 commands = [
     [ "coverage", "run", "--source={envsitepackagesdir}/dispatch", "-m", "pytest", "--doctest-modules", "{envsitepackagesdir}/dispatch", "tests" ],
@@ -210,20 +201,11 @@ commands = [
 ]
 
 [tool.tox.env.linters]
-description = "Run the pre-commit, flake8 and bandit linters."
-extras = [ "qa" ]
+description = "Run the prek, flake8 and bandit linters."
 commands = [
-    [ "pre-commit", "run", "--all-files", "--show-diff-on-failure", "python-no-eval" ],
-    [ "pre-commit", "run", "--all-files", "--show-diff-on-failure", "python-no-log-warn" ],
-    [ "pre-commit", "run", "--all-files", "--show-diff-on-failure", "python-check-blanket-noqa" ],
-    [ "pre-commit", "run", "--all-files", "--show-diff-on-failure", "check-merge-conflict" ],
-    [ "pre-commit", "run", "--all-files", "--show-diff-on-failure", "check-yaml" ],
-    [ "pre-commit", "run", "--all-files", "--show-diff-on-failure", "check-case-conflict" ],
-    [ "pre-commit", "run", "--all-files", "--show-diff-on-failure", "debug-statements" ],
-    [ "pre-commit", "run", "--all-files", "--show-diff-on-failure", "name-tests-test" ],
+    [ "prek", "run", "--all-files", "--show-diff-on-failure", "--skip", "ruff", "--skip", "ruff-format", "--skip", "prettier", "--skip", "doc8", "--skip", "rstcheck" ],
     [ "ruff", "check", "." ],
 ]
-
 
 [tool.tox.env.docs]
 description = "Build the HTML docs from scratch using Sphinx."
