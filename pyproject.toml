@@ -24,7 +24,7 @@ dependencies = [
     "numba >= 0.65.0,< 0.66",
     "numexpr >= 2.8, < 2.14.2",
     "numpy >= 1.18.5,< 3",
-    "pandas >= 1.4,< 3.0",
+    "pandas >= 1.4,< 4.0",
     "pandera >= 0.20.1, < 0.31",
     "pyarrow>=7, <25",
 ]
