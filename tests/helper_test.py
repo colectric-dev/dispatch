@@ -41,19 +41,19 @@ def zero_profiles_outside_operating_dates_slow(
     dt_idx = pd.concat(
         [profiles.index.to_series()] * profiles.shape[1],
         axis=1,
-    ).to_numpy(dtype=np.datetime64)
+    ).to_numpy(dtype="datetime64[ns]")
     return pd.DataFrame(
         (
             (
                 dt_idx
                 <= retirement_date.fillna(profiles.index.max()).to_numpy(
-                    dtype=np.datetime64
+                    dtype="datetime64[ns]"
                 )
             )
             & (
                 dt_idx
                 >= operating_date.fillna(profiles.index.min()).to_numpy(
-                    dtype=np.datetime64
+                    dtype="datetime64[ns]"
                 )
             )
         )

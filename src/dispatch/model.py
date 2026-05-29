@@ -10,6 +10,12 @@ from typing import ClassVar, Literal
 import numpy as np
 import pandas as pd
 
+from dispatch import __version__
+from dispatch.constants import COLOR_MAP, MTDF, PLOT_MAP
+from dispatch.engine import dispatch_engine, dispatch_engine_auto
+from dispatch.helpers import dispatch_key, zero_profiles_outside_operating_dates
+from dispatch.metadata import LOAD_PROFILE_SCHEMA, Validator
+
 try:
     import plotly.express as px
     from plotly.graph_objects import Figure
@@ -20,6 +26,12 @@ except ModuleNotFoundError:
 
     Figure = Any
     PLOTLY_INSTALLED = False
+
+# pandas 3.0 removed the ``dropna`` argument from ``DataFrame.stack`` because the
+# new implementation never introduces NA rows. To keep one code path that works
+# under both pandas <3 (old default stack behavior) and pandas >=3 (new default),
+# we branch on the major version.
+_PANDAS_MAJOR_VERSION = int(pd.__version__.split(".", 1)[0])
 
 __all__ = ["DispatchModel"]
 
@@ -40,12 +52,6 @@ except ModuleNotFoundError:
             """Write object to file or buffer."""
             raise NotImplementedError("datazip is required for this functionality")
 
-
-from dispatch import __version__
-from dispatch.constants import COLOR_MAP, MTDF, PLOT_MAP
-from dispatch.engine import dispatch_engine, dispatch_engine_auto
-from dispatch.helpers import dispatch_key, zero_profiles_outside_operating_dates
-from dispatch.metadata import LOAD_PROFILE_SCHEMA, Validator
 
 LOGGER = logging.getLogger(__name__)
 
@@ -991,9 +997,18 @@ class DispatchModel(IOMixin):
             dropna = False
         if col_name is None:
             return out
+        if _PANDAS_MAJOR_VERSION >= 3:
+            # pandas >=3 dropped the ``dropna`` kwarg and never introduces NA
+            # rows in stack. Replicate the legacy ``dropna=True`` behavior by
+            # dropping after the fact; ``dropna=False`` is already the new
+            # default so it needs no extra work.
+            stacked = out.stack(level=out.columns.names)
+            if dropna:
+                stacked = stacked.dropna()
+        else:
+            stacked = out.stack(level=out.columns.names, dropna=dropna)
         return (
-            out.stack(level=out.columns.names, dropna=dropna)
-            .reorder_levels(order=[*out.columns.names, "datetime"])
+            stacked.reorder_levels(order=[*out.columns.names, "datetime"])
             .to_frame(name=col_name)
             .sort_index()
         )

@@ -24,7 +24,7 @@ dependencies = [
     "numba >= 0.65.0,< 0.66",
     "numexpr >= 2.8, < 2.14.2",
     "numpy >= 1.18.5,< 3",
-    "pandas >= 1.4,< 3.0",
+    "pandas >= 1.4,< 4.0",
     "pandera >= 0.20.1, < 0.31",
     "pyarrow>=7, <25",
 ]
@@ -176,7 +176,7 @@ pydocstyle.convention = "google"
 "tests/engine_test.py" = ["E501"]
 
 [tool.tox]
-env_list = [ "linters", "docs", "prep", "3.13", "3.14", "coverage" ]
+env_list = [ "linters", "docs", "prep", "3.13", "3.14", "3.14-pandas2", "coverage" ]
 
 [tool.tox.env.prep]
 skip_install = true
@@ -188,11 +188,16 @@ allowlist_externals = [ "bash", "ruff", "prek" ]
 runner = "uv-venv-runner"
 extras = [ "dev", "viz" ]
 commands = [
+    [ "python", "-c", 'import importlib.metadata as m; [print(f"{d.name}=={d.version}") for d in sorted(m.distributions(), key=lambda x: (x.name or "").lower())]' ],
     [ "coverage", "run", "--source={envsitepackagesdir}/dispatch", "-m", "pytest", "--doctest-modules", "{envsitepackagesdir}/dispatch", "tests" ],
 ]
 
+[tool.tox.env."3.14-pandas2"]
+description = "Run tests on Python 3.14 against the pandas <3 line to verify back-compat."
+deps = [ "pandas<3.0" ]
+
 [tool.tox.env.coverage]
-depends = [ "3.13", "3.14" ]
+depends = [ "3.13", "3.14", "3.14-pandas2" ]
 skip_install = true
 deps = "coverage"
 commands = [
