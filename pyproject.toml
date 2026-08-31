@@ -49,7 +49,7 @@ qa = []
 tooling = []
 tests = []
 viz = [
-    "plotly>5.10,<7",
+    "plotly>5.10,<8",
     "kaleido>0.2,<2",
 ]
 
